@@ -29,6 +29,6 @@ namespace log4net.Appender.Loki
 
     public abstract class LokiCredentials
     {
-        public string Url { get; protected set; }
+        public string Url { get; protected set; } = "";
     }
 }

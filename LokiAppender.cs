@@ -3,6 +3,7 @@ using log4net.Appender.Loki.Labels;
 using log4net.Core;
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 
@@ -10,16 +11,25 @@ namespace log4net.Appender
 {
     public class LokiAppender : BufferingAppenderSkeleton
     {
-        public string ServiceUrl { get; set; }
-        public string BasicAuthUserName { get; set; }
-        public string BasicAuthPassword { get; set; }
-        public bool TrustSelfCignedCerts { get; set; }
+        public string ServiceUrl { get; set; } = "";
+        public string BasicAuthUserName { get; set; } = "";
+        public string BasicAuthPassword { get; set; } = "";
+        public bool TrustSelfCignedCerts { get; set; } = false;
 
-        private readonly LokiLabel[] labels = new LokiLabel[]
+        public LokiAppender() 
         {
-            new LokiLabel("host", Environment.MachineName),
-            new LokiLabel("app", Process.GetCurrentProcess().ProcessName)
-        };
+            AddLabel("host", Environment.MachineName);
+            AddLabel("app", Process.GetCurrentProcess().ProcessName);
+            AddLabel("title", Console.Title);
+        }
+
+        public LokiAppender AddLabel(string key, string value) 
+        {
+            labels.Add(new LokiLabel(key, value));
+            return this;
+        }
+
+        private readonly List<LokiLabel> labels = new ();
 
         private void PostLoggingEvent(LoggingEvent[] loggingEvents)
         {

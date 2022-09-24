@@ -15,6 +15,7 @@ namespace log4net.Appender.Loki
 
         public LokiHttpClient(bool trustSelfCignedCerts)
         {
+            /*
             if (trustSelfCignedCerts)
             {
                 var handler = new WebRequestHandler();
@@ -22,12 +23,13 @@ namespace log4net.Appender.Loki
                 {
                     return true;
                 };
+                
                 HttpClient = new HttpClient(handler);
             }
             else
-            {
+            {*/
                 HttpClient = new HttpClient();
-            }
+            //}
         }
 
         public void SetAuthCredentials(LokiCredentials credentials)

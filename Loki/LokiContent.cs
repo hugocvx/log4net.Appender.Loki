@@ -19,7 +19,7 @@ namespace log4net.Appender.Loki
             JsonSerializer serializer = new JsonSerializer();
             TextWriter writer = new StringWriter();
             serializer.Serialize(writer, this);
-            return writer.ToString();
+            return writer?.ToString()??"";
         }
     }
 }

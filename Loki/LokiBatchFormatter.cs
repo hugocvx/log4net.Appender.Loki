@@ -42,15 +42,18 @@ namespace log4net.Appender.Loki
                 content.Streams.Add(stream);
 
                 stream.Labels.Add(new LokiLabel("level", GetLevel(logEvent.Level)));
-                foreach (LokiLabel globalLabel in _globalLabels)
+                stream.Labels.Add(new LokiLabel("logger", logEvent.LoggerName));
+                foreach (LokiLabel globalLabel in _globalLabels) 
+                {
                     stream.Labels.Add(new LokiLabel(globalLabel.Key, globalLabel.Value));
+                }
 
                 foreach (var key in logEvent.Properties.GetKeys())
                 {
                     // Some enrichers pass strings with quotes surrounding the values inside the string,
                     // which results in redundant quotes after serialization and a "bad request" response.
                     // To avoid this, remove all quotes from the value.
-                    stream.Labels.Add(new LokiLabel(key, logEvent.Properties[key].ToString().Replace("\"", "")));
+                    stream.Labels.Add(new LokiLabel(key, logEvent.Properties[key]?.ToString()?.Replace("\"", "")??""));
                 }
 
                 var localTime = DateTime.Now;
